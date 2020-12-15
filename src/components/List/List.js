@@ -13,16 +13,16 @@ const useStyle = makeStyles((theme) => ({
     }
 }));
 
-export default function List() {
+export default function List({ list }) {
     const classes = useStyle();
     return (
         <React.Fragment>
             <Paper className={classes.root}>
                 <CssBaseline />
-                <Title />
-                <Card />
-                <Card />
-                <Card />
+                <Title title={list.title} />
+                {list.cards.map(card => {
+                    return <Card card={card} key={card.id} />
+                })}
                 <InputContainer />
             </Paper>
         </React.Fragment>
