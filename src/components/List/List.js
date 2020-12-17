@@ -23,7 +23,7 @@ export default function List({ list }) {
                 {list.cards.map(card => {
                     return <Card card={card} key={card.id} />
                 })}
-                <InputContainer />
+                <InputContainer listId={list.id} />
             </Paper>
         </React.Fragment>
     )
