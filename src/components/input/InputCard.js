@@ -33,8 +33,16 @@ export default function InputCard({ setOpen, listId }) {
     }
 
     const handleBtnConfirm = () => {
-        addMoreCard(cardTitle, listId);
+        if (cardTitle) {
+            addMoreCard(cardTitle, listId);
+            setCardTitle('');
+            setOpen(false);
+        }
+    }
+
+    const handleBlur = () => {
         setOpen(false);
+        setCardTitle('');
     }
 
     return (
@@ -44,7 +52,7 @@ export default function InputCard({ setOpen, listId }) {
                     <InputBase
                         multiline
                         onChange={handleOnChange}
-                        onBlur={() => setOpen(false)}
+                        onBlur={handleBlur}
                         fullWidth
                         inputProps={{
                             className: classes.input,
@@ -55,8 +63,10 @@ export default function InputCard({ setOpen, listId }) {
                 </Paper>
             </div>
             <div className={classes.confirm}>
-                <Button className={classes.btnConfirm}
-                        onClick={handleBtnConfirm}
+                <Button
+                    className={classes.btnConfirm}
+                    onClick={handleBtnConfirm}
+                    disabled={cardTitle == ''}
                 >Add Card</Button>
                 <IconButton
                     onClick={() => setOpen(false)}
