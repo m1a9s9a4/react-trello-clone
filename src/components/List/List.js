@@ -19,11 +19,11 @@ export default function List({ list }) {
         <React.Fragment>
             <Paper className={classes.root}>
                 <CssBaseline />
-                <Title title={list.title} />
+                <Title title={list.title} listId={list.id}/>
                 {list.cards.map(card => {
                     return <Card card={card} key={card.id} />
                 })}
-                <InputContainer listId={list.id} />
+                <InputContainer listId={list.id} type="card"/>
             </Paper>
         </React.Fragment>
     )

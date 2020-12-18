@@ -24,25 +24,39 @@ const useStyle = makeStyles((theme) => ({
     }
 }));
 
-export default function InputCard({ setOpen, listId }) {
+export default function InputCard({ setOpen, listId, type }) {
     const classes = useStyle();
-    const {addMoreCard} = useContext(storeApi);
+    const {addMoreCard, addMoreList} = useContext(storeApi);
     const [cardTitle, setCardTitle] = useState('');
     const handleOnChange = (e) => {
+        console.log(e.target.value);
         setCardTitle(e.target.value);
     }
 
     const handleBtnConfirm = () => {
-        if (cardTitle) {
+        console.log(cardTitle, listId);
+        if (type === 'card') {
             addMoreCard(cardTitle, listId);
+            setCardTitle('');
+            setOpen(false);
+        } else {
+            addMoreList(cardTitle);
             setCardTitle('');
             setOpen(false);
         }
     }
 
     const handleBlur = () => {
+        console.log(cardTitle);
         setOpen(false);
         setCardTitle('');
+    }
+
+    const handlePlaceholder = (type) => {
+        if (type === 'list') {
+            return 'Enter a list title ...';
+        }
+        return 'Enter a title ...';
     }
 
     return (
@@ -52,13 +66,13 @@ export default function InputCard({ setOpen, listId }) {
                     <InputBase
                         multiline
                         onChange={handleOnChange}
-                        onBlur={handleBlur}
+                        // onBlur={handleBlur}
                         fullWidth
                         inputProps={{
                             className: classes.input,
                         }}
                         value={cardTitle}
-                        placeholder="Enter a title ..."
+                        placeholder={handlePlaceholder(type)}
                     />
                 </Paper>
             </div>
@@ -67,7 +81,9 @@ export default function InputCard({ setOpen, listId }) {
                     className={classes.btnConfirm}
                     onClick={handleBtnConfirm}
                     disabled={cardTitle == ''}
-                >Add Card</Button>
+                >
+                    {type === 'card' ? 'Add Card' : 'Add List'}
+                </Button>
                 <IconButton
                     onClick={() => setOpen(false)}
                 >
