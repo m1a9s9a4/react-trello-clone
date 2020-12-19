@@ -1,15 +1,15 @@
 const cards = [
     {
         id: 'card-1',
-        title: 'titles goes here',
+        title: 'title1 goes here',
     },
     {
         id: 'card-2',
-        title: 'titles goes here',
+        title: 'title2 goes here',
     },
     {
         id: 'card-3',
-        title: 'titles goes here',
+        title: 'title3 goes here',
     }
 ];
 
@@ -26,11 +26,11 @@ const data = {
             cards: [
                 {
                     id: 'card-4',
-                    title: 'titles goes here',
+                    title: 'title4 goes here',
                 },
                 {
                     id: 'card-5',
-                    title: 'titles goes here',
+                    title: 'title5 goes here',
                 },
             ],
         },
