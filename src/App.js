@@ -5,7 +5,7 @@ import store from './utils/store';
 import StoreApi from './utils/storeApi';
 import InputContainer from './components/input/InputContainer';
 import {makeStyles} from '@material-ui/core/styles';
-import {DragDropContext} from "react-beautiful-dnd";
+import {DragDropContext, Droppable} from "react-beautiful-dnd";
 
 const useStyle = makeStyles((theme) => ({
     root: {
@@ -72,8 +72,15 @@ export default function App() {
     }
 
     const onDragEnd = (result) => {
-        const {destination, source, draggableId} = result;
+        const {destination, source, draggableId, type} = result;
         if (!destination) {
+            return;
+        }
+
+        if (type === "list") {
+            const newListIds = data.listsIds;
+            newListIds.splice(source.index, 1);
+            newListIds.splice(destination.index, 0, draggableId);
             return;
         }
         const sourceList = data.lists[source.droppableId];
@@ -82,33 +89,46 @@ export default function App() {
             return card.id === draggableId
         })[0];
 
-        console.log(source.droppableId);
-        console.log(destination.droppableId);
+        let newState;
+        sourceList.cards.splice(source.index, 1);
+        destinationList.cards.splice(destination.index, 0, draggingCard);
         if (source.droppableId === destination.droppableId) {
-            sourceList.cards.splice(source.index, 1);
-            destinationList.cards.splice(destination.index, 0, draggingCard);
-            const newState = {
+            newState = {
                 ...data,
                 lists: {
                     ...data.lists,
                     [sourceList.id]: destinationList
                 }
             }
-            console.log(newState);
-            setData(newState);
+        } else {
+            newState = {
+                ...data,
+                lists: {
+                    ...data.lists,
+                    [sourceList.id]: sourceList,
+                    [destinationList.id]: destinationList,
+                }
+            }
         }
+        console.log(newState);
+        setData(newState);
     }
 
     return (
         <StoreApi.Provider value={{ addMoreCard, addMoreList, updateListTitle }}>
             <DragDropContext onDragEnd={onDragEnd}>
-                <div className={classes.root}>
-                    {data.listsIds.map((id) => {
-                        const list = data.lists[id];
-                        return <List list={list} key={id} />
-                    })}
-                    <InputContainer type="list" />
-                </div>
+                <Droppable droppableId="app" type="list" direction="horizontal">
+                    {(provided) => (
+                        <div className={classes.root} ref={provided.innerRef} {...provided.droppableProps}>
+                            {data.listsIds.map((id, index) => {
+                                const list = data.lists[id];
+                                return <List list={list} key={id} index={index}/>
+                            })}
+                            <InputContainer type="list" />
+                            {provided.placeholder}
+                        </div>
+                        )}
+                </Droppable>
             </DragDropContext>
         </StoreApi.Provider>
     );
